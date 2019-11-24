@@ -1,0 +1,29 @@
+#!/bin/bash
+# start
+
+if [[ $# -lt 1 ]]
+then
+  echo "usage: $0 <executable> [args ..]"
+  exit
+fi
+
+if ! [[ -f "$2" ]]; then
+  echo "$2 does not exist"
+  exit
+fi
+
+EXECUTABLE=$1
+RECORD=pid
+if ! [[ -d "$RECORD" ]]; then
+  mkdir $RECORD
+fi
+
+CMDLINE=$1
+while [[ $# -gt 1 ]]
+do
+  CMDLINE="${CMDLINE} ${2}"
+  shift
+done
+$CMDLINE &
+PID=$!
+echo "${CMDLINE}" > $RECORD/$EXECUTABLE-process.$PID
